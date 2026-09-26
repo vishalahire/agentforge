@@ -1,4 +1,14 @@
-# AgentForge
+<p align="center">
+  <img src="docs/assets/agentforge-banner.png"
+       alt="AgentForge — Scale coding agents across the software lifecycle"
+       width="1000" />
+</p>
+
+<h1 align="center">AgentForge</h1>
+
+<p align="center">
+  Scale coding agents across the software lifecycle.
+</p>
 
 > 🚧 **Active Development**
 >
