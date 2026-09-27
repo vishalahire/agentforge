@@ -1,0 +1,56 @@
+# AgentForge Repository Manifest
+#
+# Machine-readable entry point for an AgentForge-aware repository.
+# Human-readable documentation remains the primary source of truth.
+# This specification is experimental and expected to evolve.
+
+schema_version: "0.1"
+
+project:
+  name: "AgentForge"
+  description: >
+    An experimental open engineering control plane for coding agents,
+    exploring portable repository contracts, context efficiency,
+    enterprise guardrails, evaluation, and agent-assisted workflows
+    across the software lifecycle.
+
+repository:
+  readme: "../README.md"
+  agent_instructions: "../AGENTS.md"
+
+  documentation:
+    architecture: "../docs/architecture/"
+    decisions: "../docs/decisions/"
+    research: "../docs/research/"
+    evaluations: "../docs/evals/"
+
+agentforge:
+  capabilities: "./capabilities/"
+  context: "./context/"
+  guardrails: "./guardrails/"
+  evaluations: "./evals/"
+
+discovery:
+  strategy: "progressive"
+
+  entrypoints:
+    - "../README.md"
+    - "../AGENTS.md"
+
+portability:
+  vendor_neutral: true
+
+  adapters:
+    enabled: true
+
+policy:
+  guardrails:
+    enabled: true
+    path: "./guardrails/"
+
+evaluation:
+  enabled: true
+  path: "./evals/"
+
+metadata:
+  status: "experimental"
