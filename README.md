@@ -1,57 +1,69 @@
+# AgentForge
+
 <p align="center">
   <img src="docs/assets/agentforge-banner.png"
        alt="AgentForge — Scale coding agents across the software lifecycle"
        width="1000" />
 </p>
 
-<h1 align="center">AgentForge</h1>
-
-<p align="center">
-  Scale coding agents across the software lifecycle.
-</p>
-
 > 🚧 **Active Development**
 >
-> AgentForge is an experimental open-source project exploring how AI coding agents can be used reliably, efficiently, and safely across the software engineering lifecycle.
+> AgentForge is an experimental open-source project exploring how to make coding-agent workflows portable, governable, context-efficient, and measurable across the software lifecycle.
 >
-> The architecture, APIs, skills, guardrails, evaluation framework, and repository structure are expected to evolve as the project develops.
+> The architecture, schemas, adapters, guardrails, evaluation framework, and repository conventions are expected to evolve as experiments produce evidence.
 
-## Engineering teams, augmented by agents
+## Scale coding agents across the software lifecycle
 
-AI coding agents are becoming increasingly capable at helping individual developers write, review, test, and understand code.
+AgentForge is an **open engineering control plane for coding agents**.
 
-The harder problem begins when agents become part of an engineering organization.
+It explores a standardized way for repositories to expose:
 
-How do teams make agent-assisted engineering:
+- relevant context
+- reusable capabilities and skills
+- enterprise guardrails
+- tool permissions
+- evaluation requirements
+- agent-runtime integration
 
-- consistent across developers and repositories?
-- aware of architecture and organizational standards?
-- efficient with context, tokens, and model usage?
-- measurable rather than anecdotal?
-- safe enough to interact with enterprise systems?
-- capable of debugging production issues using real operational evidence?
-- able to learn from code reviews, incidents, tests, and engineering decisions?
-- portable across different coding agents and model providers?
+across different coding agents and development environments.
 
-**AgentForge explores that problem.**
+The goal is **not** to create another coding assistant, agent runtime, prompt library, or tool protocol.
 
-The goal is to create an open, reusable, agent-agnostic engineering toolkit that helps teams scale coding agents across the software-development lifecycle.
+Instead, AgentForge focuses on the engineering layer that coordinates them.
+
+```text
+                    AgentForge
+             Engineering Control Plane
+                        │
+        ┌───────────────┼───────────────┐
+        ▼               ▼               ▼
+     Context        Guardrails        Evals
+        │               │               │
+        ├───────────────┼───────────────┤
+        ▼               ▼               ▼
+      Skills           MCP            Agents
+```
+
+AgentForge is intentionally being developed as an experimentation and exploration project.
+
+The project will test whether explicit agent-readable repository conventions can improve:
+
+- task success
+- context efficiency
+- token consumption
+- agent portability
+- policy compliance
+- engineering quality
+
+rather than assuming those benefits in advance.
 
 ---
 
 # Why AgentForge?
 
-Most coding-agent workflows today focus primarily on one interaction:
+Coding agents are becoming increasingly capable at helping individual developers understand, write, review, and test code.
 
-```text
-Developer
-    ↓
-Coding Agent
-    ↓
-Code
-```
-
-Real software engineering is a much larger system:
+But real software engineering is a much larger system.
 
 ```text
 Understand
@@ -76,11 +88,25 @@ Learn
           Improve future engineering
 ```
 
-AgentForge explores how agents can participate across this lifecycle while preserving human control, enterprise policies, and measurable engineering quality.
+As coding agents begin participating across this lifecycle, new engineering questions emerge:
+
+- How should an agent discover the context relevant to a task?
+- How can repository knowledge remain portable across different coding agents?
+- How should enterprise policies constrain agent behavior?
+- Which tools may an agent invoke, and under what permissions?
+- How can unnecessary context and token usage be reduced?
+- When should a workflow use a Skill rather than a specialized agent?
+- How should agent behavior be evaluated?
+- How do we distinguish plausible output from evidence-backed conclusions?
+- How can lessons from production incidents improve future agent behavior?
+
+AgentForge focuses on the **control layer around coding agents**:
+
+> how they discover context, load skills, access tools, respect enterprise policy, and prove that their work is correct.
 
 It is **not intended to be a collection of prompts**.
 
-The focus is on the engineering system around the agents:
+The focus is the engineering system surrounding the agents.
 
 ```text
 Agents
@@ -124,19 +150,19 @@ Agent-specific adapters may exist where necessary, but reusable engineering know
 
 Software repositories have traditionally been optimized for humans.
 
-Modern coding agents can already navigate conventional repositories, inspect code, read documentation, analyze Git history, and infer architecture.
+Modern coding agents can already navigate conventional repositories, inspect source code, read documentation, analyze Git history, and infer architecture.
 
-AgentForge does **not** aim to replace those conventions with a second machine-only repository structure.
+AgentForge does **not** aim to replace those conventions with a separate machine-only repository.
 
 Instead, the principle is:
 
 > **Human-readable by default. Agent-explicit where intent, constraints, context, or capabilities matter.**
 
-The repository should have one source of truth whenever possible.
+Human-facing documentation remains the source of truth wherever possible.
 
-Agent-facing metadata should reference existing documentation rather than duplicating it.
+Agent-facing metadata should reference existing documentation rather than duplicate it.
 
-A repository may expose a lightweight agent entry point such as:
+A repository may expose a lightweight AgentForge entry point such as:
 
 ```text
 AGENTS.md
@@ -145,7 +171,8 @@ AGENTS.md
 ├── manifest.yaml
 ├── capabilities/
 ├── context/
-└── guardrails/
+├── guardrails/
+└── evals/
 ```
 
 This can help an agent quickly discover:
@@ -153,7 +180,7 @@ This can help an agent quickly discover:
 - project purpose
 - important architecture
 - accepted architecture decisions
-- available skills
+- available skills and capabilities
 - build and test commands
 - relevant repository context
 - tool permissions
@@ -166,7 +193,93 @@ The objective is to make engineering intent unambiguous to both.
 
 ---
 
-## 3. Skills before agents
+## 3. Portable repository contracts
+
+AgentForge explores the idea that a repository can expose a predictable contract for coding agents.
+
+Instead of requiring every coding agent to independently infer:
+
+```text
+Where is the architecture?
+Which files matter?
+Which rules apply?
+Which tools may I use?
+What environment am I operating in?
+Which skills are available?
+How should success be measured?
+```
+
+an AgentForge-aware repository can expose those answers explicitly.
+
+Conceptually:
+
+```text
+                 Repository
+                     │
+                .agentforge/
+                     │
+           Canonical Repo Contract
+                     │
+        ┌────────────┼────────────┐
+        ▼            ▼            ▼
+     Copilot      Claude Code    Codex
+        │            │            │
+        └────────────┼────────────┘
+                     ▼
+              Shared Intent
+```
+
+The goal is to reduce repeated repository exploration while improving consistency across coding-agent environments.
+
+This remains a hypothesis to be measured, not an assumed benefit.
+
+---
+
+## 4. Adapters instead of vendor lock-in
+
+Coding agents currently use different repository instruction conventions.
+
+AgentForge will explore lightweight adapters that translate or bootstrap the canonical AgentForge contract into agent-specific formats.
+
+For example:
+
+```text
+                     .agentforge/
+                  canonical contract
+                         │
+          ┌──────────────┼──────────────┐
+          ▼              ▼              ▼
+      AGENTS.md       CLAUDE.md      Copilot
+                                        shim
+          │              │              │
+          └──────────────┼──────────────┘
+                         ▼
+                   Coding Agents
+```
+
+These adapter files should remain thin.
+
+They should point agents toward the canonical repository contract rather than duplicating large amounts of policy or context.
+
+A future AgentForge CLI may support workflows such as:
+
+```text
+agentforge init
+agentforge inspect
+agentforge doctor
+
+agentforge export copilot
+agentforge export claude
+agentforge export codex
+```
+
+The purpose of adapters is compatibility.
+
+AgentForge should not require vendors to natively support `.agentforge/` before the project can be useful.
+
+---
+
+## 5. Skills before agents
 
 Not every engineering task requires another autonomous agent.
 
@@ -184,11 +297,11 @@ Specialized Agent
 Multi-agent Workflow
 ```
 
-Additional autonomy should be introduced only where it produces measurable value.
+Additional autonomy should be introduced only when it produces measurable value.
 
 ---
 
-## 4. Progressive context over giant prompts
+## 6. Progressive context over giant prompts
 
 Engineering agents should receive the context required for the current task rather than loading an entire repository or organization's knowledge into every request.
 
@@ -202,13 +315,14 @@ AgentForge will explore techniques such as:
 - just-in-time retrieval
 - selective architecture loading
 - dynamic tool discovery
+- deterministic context routing
 - structured organizational knowledge
 
 Context is treated as a finite engineering resource.
 
 ---
 
-## 5. Agent compute is not infinite
+## 7. Agent compute is not infinite
 
 Tokens, latency, tool calls, model usage, and retries all have cost.
 
@@ -232,7 +346,7 @@ It is to make them **perform useful engineering work efficiently and reliably**.
 
 ---
 
-## 6. Enterprise guardrails are first-class
+## 8. Enterprise guardrails are first-class
 
 Coding agents may provide their own platform and model safety mechanisms.
 
@@ -325,7 +439,7 @@ Tool Execution
 
 ---
 
-## 7. Evidence over plausibility
+## 9. Evidence over plausibility
 
 AI systems can generate explanations that sound convincing without being correct.
 
@@ -346,7 +460,7 @@ AgentForge will favor evidence-driven workflows wherever possible.
 
 ---
 
-## 8. Evaluation is part of the capability
+## 10. Evaluation is part of the capability
 
 Every significant AgentForge capability should eventually define how its performance is measured.
 
@@ -366,7 +480,7 @@ Evaluation may include:
 
 ---
 
-## 9. Human control at consequential boundaries
+## 11. Human control at consequential boundaries
 
 Agents may autonomously investigate, analyze, generate, test, and recommend.
 
@@ -382,7 +496,7 @@ should require explicit authorization unless an organization deliberately config
 
 ---
 
-## 10. Engineering organizations should learn
+## 12. Engineering organizations should learn
 
 Software teams already generate large amounts of engineering knowledge:
 
@@ -397,7 +511,7 @@ Software teams already generate large amounts of engineering knowledge:
 
 Much of this knowledge remains fragmented.
 
-AgentForge will explore how historical engineering evidence can be transformed into reusable skills, policies, and contextual guidance.
+AgentForge will explore how historical engineering evidence can be transformed into reusable skills, policies, contextual guidance, and evaluation scenarios.
 
 ---
 
@@ -421,12 +535,13 @@ Organizational Learning
 
 ## Platform capabilities
 
-These enable engineering agents to work reliably at scale.
+These enable engineering agents to operate reliably across repositories and agent runtimes.
 
 ```text
-Agent-readable Repository Metadata
-Skills
+Agent-aware Repository Contract
+Adapters
 Context Routing
+Skills
 Tool Integration
 Enterprise Guardrails
 Permissions
@@ -766,7 +881,7 @@ Cross-cutting concerns include:
 
 AgentForge itself will be developed using the same principles it promotes.
 
-The repository is expected to expose both conventional human documentation and explicit agent guidance.
+The repository is expected to expose both conventional human documentation and explicit agent-facing configuration.
 
 A possible structure is:
 
@@ -782,7 +897,8 @@ agentforge/
 │   ├── manifest.yaml
 │   ├── capabilities/
 │   ├── context/
-│   └── guardrails/
+│   ├── guardrails/
+│   └── evals/
 │
 ├── docs/
 │   ├── architecture/
@@ -798,6 +914,78 @@ agentforge/
 ```
 
 The intention is to preserve **one source of truth** while exposing deterministic entry points that help coding agents discover the information relevant to their task.
+
+---
+
+# The `.agentforge/` convention
+
+The `.agentforge/` directory is intended to become the repository-specific control surface for AgentForge.
+
+It should contain only information that AgentForge tooling or compatible adapters may need to discover, interpret, validate, or enforce programmatically.
+
+It should **not** become a duplicate documentation tree.
+
+For example:
+
+```text
+docs/architecture/context-routing.md
+```
+
+may explain context routing to humans, while:
+
+```text
+.agentforge/context/routes.yaml
+```
+
+may define executable routing behavior.
+
+Similarly:
+
+```text
+docs/security/enterprise-guardrails.md
+```
+
+may explain the policy model, while:
+
+```text
+.agentforge/guardrails/enterprise.yaml
+```
+
+may contain machine-readable policy.
+
+The initial `.agentforge/` specification is expected to remain deliberately small and evolve based on experimentation.
+
+---
+
+# Adapter model
+
+AgentForge should not assume coding agents will natively understand `.agentforge/`.
+
+Instead, compatibility can be introduced through lightweight adapters.
+
+```text
+                     .agentforge/
+                  canonical contract
+                         │
+         ┌───────────────┼────────────────┐
+         ▼               ▼                ▼
+      AGENTS.md       CLAUDE.md        Copilot
+                                         shim
+         │               │                │
+         └───────────────┼────────────────┘
+                         ▼
+                    Agent Runtime
+```
+
+Adapters may:
+
+- bootstrap the coding agent into the AgentForge contract
+- expose relevant instructions in the agent's preferred format
+- translate repository metadata where required
+- avoid duplicating the canonical configuration
+- validate compatibility between AgentForge and the target runtime
+
+A future CLI may automate generation and validation of these adapters.
 
 ---
 
@@ -839,6 +1027,38 @@ Where practical, changes to agent behavior should be supported by reproducible e
 
 ---
 
+# Agent-aware repository experiments
+
+One of AgentForge's foundational research questions is whether explicit repository contracts provide measurable value.
+
+For example:
+
+```text
+Experiment A
+Ordinary repository
+        vs
+Same repository + AgentForge contract
+```
+
+Potential measurements:
+
+```text
+Task success
+Files inspected
+Tokens consumed
+Tool calls
+Time to first useful action
+Architecture-rule violations
+Policy violations
+Incorrect assumptions
+```
+
+If explicit AgentForge metadata does not produce meaningful improvements, the convention should be simplified or reconsidered.
+
+The project favors evidence over architectural enthusiasm.
+
+---
+
 # Reference environment
 
 A future AgentForge reference application may provide a controlled environment for evaluating engineering agents.
@@ -874,6 +1094,7 @@ The same scenarios could then be reused to compare:
 - context strategies
 - tool configurations
 - guardrail policies
+- AgentForge versus non-AgentForge repository structures
 
 ---
 
@@ -885,23 +1106,35 @@ The roadmap is intentionally expected to evolve as experiments generate evidence
 
 - project vision
 - architecture principles
-- agent-aware repository structure
+- agent-aware repository model
+- initial `.agentforge/` convention
 - `AGENTS.md`
+- adapter strategy
 - Architecture Decision Records
 - Capability Contract
 - evaluation methodology
 - initial enterprise guardrail model
 
-## V1 — Core engineering workflows
+## V1 — Repository contract and portability
+
+- initial `manifest.yaml`
+- AgentForge schema validation
+- context-routing experiments
+- lightweight coding-agent adapters
+- agent-ready repository benchmarks
+- initial CLI exploration
+- token/context baseline measurement
+
+## V2 — Core engineering workflows
 
 - onboarding skill
 - code-review skill
 - unit-testing skill
 - reusable skill structure
-- initial token/context measurement
 - coding-agent portability experiments
+- risk-based capability routing
 
-## V2 — Autonomous QA
+## V3 — Autonomous QA
 
 - Playwright integration
 - risk-based test-plan generation
@@ -910,7 +1143,7 @@ The roadmap is intentionally expected to evolve as experiments generate evidence
 - console/network inspection
 - QA reporting
 
-## V3 — Production debugging
+## V4 — Production debugging
 
 - vendor-neutral observability abstraction
 - logs, traces, and metrics
@@ -920,7 +1153,7 @@ The roadmap is intentionally expected to evolve as experiments generate evidence
 - production-debugging evaluations
 - permission and guardrail enforcement
 
-## V4 — Organizational learning
+## V5 — Organizational learning
 
 - analyze historical engineering feedback
 - identify recurring patterns
@@ -936,6 +1169,10 @@ The roadmap is intentionally expected to evolve as experiments generate evidence
 AgentForge will initially explore questions such as:
 
 - Does explicit agent-facing repository metadata reduce exploration time?
+- Does an AgentForge repository contract reduce token consumption?
+- How much context should be explicit versus dynamically discovered?
+- Can one canonical repository contract work across multiple coding agents?
+- How thin can vendor-specific adapters remain?
 - Does progressive context loading reduce token usage without lowering task success?
 - When should a workflow be implemented as a Skill versus an Agent?
 - When does multi-agent execution outperform a single agent?
@@ -954,12 +1191,14 @@ AgentForge is currently **not** intended to be:
 - another general-purpose coding assistant
 - a new foundation model
 - a replacement for IDEs
+- a replacement for MCP
+- a competing Agent Skills format
 - a replacement for observability platforms
 - a fully autonomous software-development organization
 - a collection of unmeasured prompts
 - permanently tied to one AI vendor
 
-Instead, AgentForge focuses on the **engineering layer that allows coding agents, tools, organizational knowledge, enterprise policies, and evaluations to work together effectively**.
+Instead, AgentForge focuses on the **engineering control plane that allows coding agents, tools, organizational knowledge, enterprise policies, and evaluations to work together effectively**.
 
 ---
 
@@ -974,7 +1213,8 @@ Expect:
 - incomplete capabilities
 - evolving terminology
 - breaking changes
-- experimental workflows
+- experimental schemas
+- changing adapter formats
 - architectural revisions
 - rapidly changing implementations
 
@@ -988,13 +1228,15 @@ Contribution guidelines will evolve as the project matures.
 
 For now, the project strongly favors contributions that:
 
-- are backed by a clear engineering problem
+- address a clear engineering problem
 - remain agent/provider agnostic where practical
+- preserve one source of truth
 - include an evaluation strategy
 - preserve human-readable documentation
 - avoid unnecessary complexity
 - consider token and runtime efficiency
 - respect enterprise security and permission boundaries
+- distinguish measured improvements from assumptions
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) once available.
 
