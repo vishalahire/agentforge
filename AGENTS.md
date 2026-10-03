@@ -126,7 +126,89 @@ Do not use an LLM where normal software is sufficient.
 
 ---
 
-# 5. Evidence before policy
+
+# 5. Developers provide task intent; the engineering environment provides context
+
+Do not rely on the developer to restate repository, team, platform, or enterprise expectations in every prompt.
+
+Where approved engineering requirements are available, resolve and apply the relevant context automatically based on the task, repository, scope, and change being attempted.
+
+The desired model is:
+
+```text
+Developer provides task intent
+        ↓
+Engineering environment resolves applicable context
+        ↓
+Coding agent receives task + approved requirements
+        ↓
+Agent plans and executes
+        ↓
+Change is independently assessed
+```
+
+A developer should not have to remember to repeat requirements such as:
+
+- approved architecture patterns;
+- supported libraries and dependencies;
+- logging and telemetry standards;
+- testing obligations;
+- ownership or service boundaries;
+- security and data-handling constraints;
+- accepted implementation patterns;
+- approved exceptions.
+
+Do not infer organizational standards from the quality of the user's prompt.
+
+The product hypothesis is that engineering quality should depend less on how much institutional context an individual developer happens to know or remember.
+
+---
+
+# 6. Engineer to the system, not the person's assumed seniority
+
+Do not infer developer competence, role, or seniority from identity, writing style, or prompt quality.
+
+The same repository and organizational requirements apply regardless of whether the person using the coding agent is an intern, junior engineer, contractor, senior engineer, or principal engineer.
+
+Interaction style may vary when explicitly requested, but engineering requirements should not.
+
+Prefer solutions that are:
+
+- consistent with the repository's approved architecture;
+- understandable by the owning team;
+- supportable using the team's approved runtime and tooling;
+- appropriately simple for the problem;
+- observable and testable;
+- maintainable by future engineers.
+
+Do not choose a more sophisticated design merely because the model can generate one.
+
+Optimize for team supportability and approved engineering intent, not maximum technical cleverness.
+
+---
+
+# 7. Let the coding agent route execution; define what counts as acceptable evidence
+
+Modern coding agents can often select appropriate tools, commands, libraries, or reasoning strategies on their own.
+
+Do not add orchestration merely to micromanage tool selection when the coding environment can resolve it reliably.
+
+Instead, where consistency matters, define:
+
+- the required engineering outcome;
+- the authoritative requirement;
+- the evidence needed to demonstrate satisfaction;
+- the acceptance or enforcement boundary.
+
+For example, an agent may choose its own exploration and editing strategy, but a repository can still require a specific trusted check or CI result before a requirement is considered satisfied.
+
+Do not substitute an LLM's statement that something "appears valid" for actual execution evidence when a deterministic validator or trusted check is available.
+
+MCP may be used as an integration mechanism for external capabilities, but it is not assumed to be the universal execution layer.
+
+---
+
+# 8. Evidence before policy
 
 Historical repository evidence can reveal recurring engineering practices, but repetition does not make a practice authoritative.
 
@@ -150,7 +232,7 @@ An approved requirement should have clear authority, scope, provenance, and life
 
 ---
 
-# 6. Human approval is part of the product model
+# 9. Human approval is part of the product model
 
 The project deliberately separates:
 
@@ -172,7 +254,7 @@ Where approval state matters, preserve it explicitly.
 
 ---
 
-# 7. Keep authority, guidance, and enforcement separate
+# 10. Keep authority, guidance, and enforcement separate
 
 Do not treat these as equivalent:
 
@@ -199,7 +281,7 @@ Never describe guidance as enforcement unless a trusted enforcement mechanism ex
 
 ---
 
-# 8. Vendor-neutral core
+# 11. Vendor-neutral core
 
 Core abstractions should not depend unnecessarily on:
 
@@ -226,7 +308,7 @@ Adapters should expose unsupported mappings explicitly rather than pretending al
 
 ---
 
-# 9. Context is a finite engineering resource
+# 12. Context is a finite engineering resource
 
 More context is not automatically better.
 
@@ -252,7 +334,7 @@ Do not silently truncate mandatory controls.
 
 ---
 
-# 10. Preserve provenance
+# 13. Preserve provenance
 
 When generating or transforming engineering requirements, preserve enough information to answer:
 
@@ -271,7 +353,7 @@ Generated summaries should not destroy traceability back to source evidence.
 
 ---
 
-# 11. Conflict handling
+# 14. Conflict handling
 
 Not all requirements can be merged mechanically.
 
@@ -294,7 +376,7 @@ When that happens:
 
 ---
 
-# 12. Adapters should remain thin
+# 15. Adapters should remain thin
 
 Agent-specific files are compatibility surfaces, not independent sources of organizational truth.
 
@@ -313,7 +395,7 @@ Avoid maintaining divergent copies of the same engineering standard across agent
 
 ---
 
-# 13. Integrate instead of rebuilding commodity infrastructure
+# 16. Integrate instead of rebuilding commodity infrastructure
 
 Do not build a new subsystem merely because the project can.
 
@@ -333,7 +415,7 @@ The project should build only where doing so tests the core product hypothesis.
 
 ---
 
-# 14. Keep the initial product boundary narrow
+# 17. Keep the initial product boundary narrow
 
 The current V0 direction is centered on:
 
@@ -361,7 +443,7 @@ Do not expand V0 into:
 
 ---
 
-# 15. Evaluation is part of the work
+# 18. Evaluation is part of the work
 
 Significant changes to product behavior should define how success will be measured.
 
@@ -394,7 +476,7 @@ Prefer controlled comparisons over anecdotal demonstrations.
 
 ---
 
-# 16. Use strong baselines
+# 19. Use strong baselines
 
 Do not prove value against deliberately weak agent configurations.
 
@@ -414,7 +496,7 @@ The project is useful only if additional machinery creates incremental benefit o
 
 ---
 
-# 17. Testing
+# 20. Testing
 
 Validate changes at the lowest useful level first.
 
@@ -440,7 +522,7 @@ Do not create tests merely to increase coverage counts.
 
 ---
 
-# 18. Security and sensitive evidence
+# 21. Security and sensitive evidence
 
 Never commit or expose:
 
@@ -464,7 +546,7 @@ Respect access controls, retention requirements, redaction, and tenant boundarie
 
 ---
 
-# 19. Tool use
+# 22. Tool use
 
 Before invoking a tool, consider:
 
@@ -480,7 +562,7 @@ Tool availability does not imply authorization.
 
 ---
 
-# 20. Architectural changes require deliberation
+# 23. Architectural changes require deliberation
 
 A change is architectural when it materially changes concepts such as:
 
@@ -501,7 +583,7 @@ Do not create ADRs for trivial implementation choices.
 
 ---
 
-# 21. Dependencies
+# 24. Dependencies
 
 Before adding a dependency, ask:
 
@@ -518,7 +600,7 @@ Prefer the smallest reliable dependency surface.
 
 ---
 
-# 22. Keep changes focused
+# 25. Keep changes focused
 
 For each task:
 
@@ -534,7 +616,7 @@ Do not opportunistically refactor unrelated areas unless necessary.
 
 ---
 
-# 23. Documentation discipline
+# 26. Documentation discipline
 
 Documentation should explain durable intent.
 
@@ -554,7 +636,7 @@ Update documentation when behavior, architecture, contracts, or user-facing work
 
 ---
 
-# 24. When uncertain
+# 27. When uncertain
 
 If several approaches are valid:
 
@@ -570,7 +652,7 @@ Do not invent requirements unsupported by the repository or the task.
 
 ---
 
-# 25. Definition of done
+# 28. Definition of done
 
 A change is not complete merely because code has been generated.
 
@@ -588,7 +670,7 @@ Where applicable, completion includes:
 
 ---
 
-# 26. Dogfood the product hypothesis
+# 29. Dogfood the product hypothesis
 
 This repository should use the practices it is trying to validate.
 
@@ -606,7 +688,7 @@ Do not dogfood speculative platform features merely to make the repository look 
 
 ---
 
-# 27. Guiding principles
+# 30. Guiding principles
 
 When choosing an implementation mechanism:
 
